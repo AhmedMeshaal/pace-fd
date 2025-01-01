@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Re;
+namespace App\Http\Responses;
 
 use Illuminate\Support\Facades\Auth;
 use Laravel\Fortify\Contracts\LoginResponse as LoginResponseContract;
@@ -15,11 +15,12 @@ class LoginResponse implements LoginResponseContract
          * REPLACE THIS WITH YOUR OWN
          * THE USER CAN BE LOCATED WITH THIS AUTH FACADE
          */
+        $role = Auth::user()->role;
 
         return $request->wantsJson()
-            ? response()->json(['register' => false])
+            ? response()->json(['two_factor_secret' => false])
             : redirect()->intended(
-                auth()->user()->currentTeam->id ? route('dashboard') : route('Register')
+                $role == 'admin' ? route('register') :route('profile.show')
             );
     }
 }
